@@ -214,6 +214,45 @@
   #spinBtn:active{ transform:translateY(4px); box-shadow:0 2px 0 #8a6a1f; }
   #spinBtn:disabled{ opacity:0.5; cursor:not-allowed; }
 
+  .winner-banner{
+    max-width:420px;
+    width:100%;
+    margin-top:20px;
+    padding:0;
+    max-height:0;
+    overflow:hidden;
+    border-radius:14px;
+    text-align:center;
+    opacity:0;
+    transition:all .4s ease;
+  }
+  .winner-banner.show{
+    padding:16px 22px;
+    max-height:200px;
+    opacity:1;
+  }
+  .winner-banner.win{
+    background:rgba(42,157,143,0.15);
+    border:1px solid var(--emerald);
+  }
+  .winner-banner.tryagain{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .winner-banner .headline{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--cream);
+    margin:0 0 4px;
+  }
+  .winner-banner.win .headline{ color:var(--emerald); }
+  .winner-banner .subline{
+    font-size:13px;
+    color:var(--muted);
+    margin:0;
+  }
+
   /* Legend */
   .legend{
     display:flex;
@@ -407,6 +446,8 @@
 
   <button id="spinBtn" onclick="spin()">Spin the wheel</button>
 
+  <div id="winnerBanner" class="winner-banner"></div>
+
   <div class="legend">
     <div class="chip"><span class="dot" style="background:#E63946"></span>iPhone</div>
     <div class="chip"><span class="dot" style="background:#2A9D8F"></span>Car</div>
@@ -567,6 +608,12 @@ function showResult(name, phone, prize){
     : `Congratulations ${name}! You won ${prize.name}. We'll reach out at ${phone} to arrange collection.`;
   overlay.classList.add('show');
   if (!isTryAgain) launchConfetti();
+
+  const banner = document.getElementById('winnerBanner');
+  banner.className = 'winner-banner show ' + (isTryAgain ? 'tryagain' : 'win');
+  banner.innerHTML = isTryAgain
+    ? `<p class="headline">${prize.icon} No prize this time, ${name}</p><p class="subline">You've got one more attempt later — good luck next round!</p>`
+    : `<p class="headline">🎉 Congratulations, ${name}!</p><p class="subline">You've won ${prize.name}. ${phone} is on file for collection.</p>`;
 }
 
 function closeModal(){
